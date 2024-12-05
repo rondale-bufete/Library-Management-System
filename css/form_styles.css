@@ -1,0 +1,132 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+a {
+    color: black;
+    text-decoration: none;
+}
+.navbar-row {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #212529;
+    padding: 10px 15px;
+    z-index: 10;
+}
+.navbar-col {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+}
+.navbar-brand {
+    padding: 10px 20px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.container-row {
+    margin-top: 25px;
+    background-image: url("./images/background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 95vh;
+    padding: 1.2rem 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+}
+.container-col {
+    max-width: 550px;
+    width: 100%;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.88);
+    padding: 30px 20px;
+    margin-top: 3rem;
+}
+.container-col > h2 {
+    text-align: center;
+    padding: 8px 15px;
+    font-weight: 500;
+    color: #fff!important;
+}
+
+.form > div > a, .form > div > small, .form > a {
+    color: #fff;
+}
+
+.input-wrapper {
+    margin: 10px auto;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.input-wrapper-submit {
+    margin: 10px auto;
+    display: flex;
+    align-items: center;
+    background: none !important;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.input-wrapper > input {
+    width: 100%;
+    padding: 10px 15px;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    color: #333;
+}
+.input-wrapper > span {
+    color: #333;
+    padding: 8px 15px;
+}
+#submitForm {
+    background: #0076ff;
+    text-transform: uppercase;
+    color: #fff;
+    border: 2px solid #0076ff;
+    transition: all 0.5s ease;
+    cursor: pointer;
+}
+#submitForm:hover {
+    background: transparent;
+}
+.form > div {
+    text-align: center;
+}
+.form > div > small, .form > div > a, .form > a {
+    font-size: 13px;
+    text-align: center;
+}
+.form > div > a.registerNow {
+    margin-left: 5px;
+    color: red;
+    transition: all 0.5 ease;
+};
+.form > div > a:hover {
+    text-decoration: underline;
+}
+.goBack {
+    display: block;
+    padding: 8px 5px;
+}
+span.divider {
+    background: #ddd;
+    padding: 1px;
+    height: 100%;
+    margin: 0 5px;
+} 
