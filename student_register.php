@@ -70,7 +70,7 @@ if (isset($_POST['register'])) {
                             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                             $mail->Port = 587;
 
-                            $mail->setFrom('rondale.bufete7@gmail.com', 'Library Management System');
+                            $mail->setFrom('rondale.bufete7@gmail.com', 'Library Management');
                             $mail->addAddress($s_email);
 
                             $mail->isHTML(true);
