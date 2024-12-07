@@ -56,7 +56,8 @@ if (isset($_POST['register'])) {
                             's_email' => $_POST['s_email'],
                             's_username' => $_POST['s_username'],
                             's_password' => password_hash($_POST['s_password'], PASSWORD_DEFAULT),
-                            'otp' => $otp
+                            'otp' => $otp,
+                            'otp_created_at' => time(),
                         ];
 
                         //PHPMailer Section
