@@ -30,16 +30,6 @@ if ($count >= 3) {
 } else {
     if (isset($_POST["login_student"])) {
 
-        // Google Recaptcha Verification
-        /* if (isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response'])) {
-            $secretKey = '6LcHn1MqAAAAAH7iclHUOfiHN5PnAh6PV7PF2fjO';
-            $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . $secretKey . '&response=' . $_POST['g-recaptcha-response']);
-            $responseData = json_decode($verifyResponse);
-
-            if ($responseData->success) {
-
-            } */
-
         // Validate username input
         if (empty($_POST["login_identifier"])) {
             $values = false;
@@ -206,9 +196,11 @@ function test_input($data)
                         <input type="submit" id="submitForm" value="Login" name="login_student" data-sitekey="6LcHn1MqAAAAAEHIjMkq5jj1L_DO8KDx1bW2Nk3v">
                     </div>
 
-                    <!-- <div class="captcha-div">
-                        <div class="g-recaptcha" data-sitekey="6LcHn1MqAAAAAEHIjMkq5jj1L_DO8KDx1bW2Nk3v" data-callback="enableSubmitButton"></div>
-                    </div> -->
+                    <div>
+                        <small>Forgot your password?</small>
+                        <a href="forgot_password.php" class="forgotPassword">Reset it here</a>
+                    </div>
+
                     <br>
                     <div>
                         <small>Don't have an Account?</small><a href="student_register.php" class="registerNow">Register Now!</a>
