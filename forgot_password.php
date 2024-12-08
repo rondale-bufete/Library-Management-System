@@ -1,38 +1,29 @@
 <?php
-// Include database connection
 include "dbcon.php";
 
-// Load PHPMailer classes
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-// Include PHPMailer Autoloader
 require 'vendor/autoload.php';
 
 $error_message = $success_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitize email input
     $email = test_input($_POST['email']);
 
     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        // Check if email exists in the database
         $stmt = mysqli_prepare($conn, "SELECT * FROM students WHERE s_email = ?");
         mysqli_stmt_bind_param($stmt, "s", $email);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
 
         if (mysqli_num_rows($result) === 1) {
-            // Generate a secure token
             $token = bin2hex(random_bytes(32));
-            $expires = time() + 3600; // Token valid for 1 hour
+            $expires = time() + 600; // Token valid 10 mins
 
-            // Save token to the database
             $row = mysqli_fetch_assoc($result);
             $user_id = $row['s_ID'];
             mysqli_query($conn, "INSERT INTO password_resets (user_id, token, expires) VALUES ('$user_id', '$token', '$expires')");
 
-            // Send reset link via email using PHPMailer
             $reset_link = "http://localhost/GitHub/Library-Management-System/reset_password.php?token=$token"; // Replace with actual domain
 
             $mail = new PHPMailer(true);

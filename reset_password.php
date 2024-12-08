@@ -6,7 +6,6 @@ $error_message = $success_message = "";
 if (isset($_GET['token'])) {
     $token = $_GET['token'];
     
-    // Check if the token exists and is valid
     $stmt = mysqli_prepare($conn, "SELECT user_id, expires FROM password_resets WHERE token = ?");
     mysqli_stmt_bind_param($stmt, "s", $token);
     mysqli_stmt_execute($stmt);
@@ -17,7 +16,6 @@ if (isset($_GET['token'])) {
         $expires = $row['expires'];
 
         if (time() <= $expires) {
-            // Token is valid, show the password reset form
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $new_password = test_input($_POST['new_password']);
                 $confirm_password = test_input($_POST['confirm_password']);
@@ -26,10 +24,8 @@ if (isset($_GET['token'])) {
                     $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
                     $user_id = $row['user_id'];
 
-                    // Update password in the database
                     mysqli_query($conn, "UPDATE students SET s_password = '$hashed_password' WHERE s_ID = '$user_id'");
 
-                    // Delete the token after successful reset
                     mysqli_query($conn, "DELETE FROM password_resets WHERE token = '$token'");
 
                     $success_message = "Your password has been reset successfully. You can now log in.";
@@ -53,7 +49,6 @@ if (isset($_GET['token'])) {
     $error_message = "No token provided.";
 }
 
-// Function to sanitize user input
 function test_input($data) {
     $data = trim($data);
     $data = stripslashes($data);
