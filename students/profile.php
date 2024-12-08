@@ -14,12 +14,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $username = test_input($_POST['username']);
         $password = test_input($_POST['password']);
 
-        $query = "UPDATE `students` SET`s_fname`='$fname',`s_lname`= '$lname',`s_course`='$course',`s_section`='$section',`s_year`='$year',`s_username`='$username',`s_password`='$password' WHERE s_ID = '$student_id' ";
+        $query = "UPDATE `students` 
+                    SET `s_fname` = '$fname', 
+                    `s_lname`= '$lname', 
+                    `s_course`= '$course', 
+                    `s_section`= '$section',
+                    `s_year`= '$year',
+                    `s_username`= '$username',
+                    `s_password`= '$password' 
+                WHERE s_ID = '$student_id' ";
         $query_run = mysqli_query($conn, $query);
 
-        if ($query_run) {
-            echo "<script>alert('Details updated successfully!');</script>";
-        } else {
+        if (!$query_run) {
             echo "<script>alert('Details not updated!');</script>";
         }
     }
@@ -95,7 +101,7 @@ function test_input($data)
                             <span class="me-2"><i class="bi bi-book-fill"></i></span>
                             <span>View Books</span>
                         </a>
-                        <a href="dashboard.php" class="nav-link px-3">
+                        <a href="history.php" class="nav-link px-3">
                             <span class="me-2"><i class="bi bi-clock-history"></i></span>
                             <span>History</span>
                         </a>
@@ -126,17 +132,17 @@ function test_input($data)
                             <input type="text" name="lname" value="<?= $data['s_lname']; ?>" class="form-control">
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-4">
                             <label class="form-label">Course</label>
                             <input type="text" name="course" value="<?= $data['s_course']; ?>" class="form-control">
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-4">
                             <label class="form-label">Section</label>
                             <input type="text" name="section" value="<?= $data['s_section']; ?>" class="form-control">
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-4">
                             <label class="form-label">Year</label>
                             <input type="number" name="year" value="<?= $data['s_year']; ?>" class="form-control">
                         </div>
@@ -146,13 +152,14 @@ function test_input($data)
                             <input type="text" name="username" value="<?= $data['s_username']; ?>" class="form-control">
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-12 hide-pass">
                             <label class="form-label">Password</label>
                             <input type="Password" name="password" value="<?= $data['s_password']; ?>" class="form-control">
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-12 d-flex justify-content-between button-pdiv">
                             <button type="submit" name="update_profile" class="btn btn-primary">Update Details</button>
+                            <button type="submit" formaction="reset_password_verify.php" class="btn btn-danger">Reset Password</button>
                         </div>
                     </form>
             <?php
