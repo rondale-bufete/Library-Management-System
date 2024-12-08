@@ -151,10 +151,6 @@ function test_input($data)
         }
     </style>
     <script>
-        // function enableSubmitButton() {
-        //     document.getElementById("submitForm").disabled = false;
-        // }
-
         function startCountdown() {
             const countdownElement = document.getElementById('countdown');
             if (countdownElement) {
