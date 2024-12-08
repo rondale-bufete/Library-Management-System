@@ -1,60 +1,66 @@
 <?php
-session_start();
-require "../dbcon.php";
-include "links.php";
+include "dbcon.php";
+include "./students/links.php";
 
-if (!isset($_SESSION['s_ID'])) {
-    die("Unauthorized access. Please log in.");
+$error_message = $success_message = "";
+
+if (isset($_GET['token'])) {
+    $token = $_GET['token'];
+    
+    $stmt = mysqli_prepare($conn, "SELECT user_id, expires FROM password_resets WHERE token = ?");
+    mysqli_stmt_bind_param($stmt, "s", $token);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (mysqli_num_rows($result) === 1) {
+        $row = mysqli_fetch_assoc($result);
+        $expires = $row['expires'];
+
+        if (time() <= $expires) {
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                $new_password = test_input($_POST['new_password']);
+                $confirm_password = test_input($_POST['confirm_password']);
+
+                if ($new_password === $confirm_password) {
+                    $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                    $user_id = $row['user_id'];
+
+                    mysqli_query($conn, "UPDATE students SET s_password = '$hashed_password' WHERE s_ID = '$user_id'");
+
+                    mysqli_query($conn, "DELETE FROM password_resets WHERE token = '$token'");
+
+                    $success_message = "Your password has been reset successfully. You can now log in.";
+                    echo
+                        "<script>
+                                alert('$success_message');
+                                window.location.href = 'student_login.php';
+                            </script>";
+                        exit();
+                } else {
+                    $error_message = "Passwords do not match.";
+                }
+            }
+        } else {
+            $error_message = "This token has expired. Please request a new password reset.";
+        }
+    } else {
+        $error_message = "Invalid token.";
+    }
+} else {
+    $error_message = "No token provided.";
 }
 
-$error_message = "";
-$confirmPass_err="";
-$success_message = "";
-$student_id = $_SESSION['s_ID'];
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['reset_password'])) {
-    $new_password = $_POST['new_password'];
-    $confirm_password = $_POST['confirm_password'];
-
-
-    if (empty($new_password) || empty($confirm_password)) {
-        $error_message = "All fields are required.";
-    } elseif ($new_password !== $confirm_password) {
-        $error_message = "Passwords do not match.";
-    } elseif (!preg_match("/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/", $new_password)) {
-        $confirmPass_err = "Password must be at least 8 characters long, including at least 1 uppercase letter, 1 number, and 1 special character.";
-    } else {
-        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-        $query = "UPDATE `students` SET `s_password` = ? WHERE `s_ID` = ?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param("si", $hashed_password, $student_id);
-
-        if ($stmt->execute()) {
-            $_SESSION = array();
-            session_destroy(); 
-            $success_message = "Password successfully updated! You will be redirected to the login page.";
-            
-            echo "<script>
-                    alert('$success_message');
-                    window.location.href = '../student_login.php';
-                  </script>";
-            exit();
-        } else {
-            $error_message = "Failed to update password. Please try again later.";
-            error_log("Error updating password: " . $stmt->error);
-        }
-        $stmt->close();
-    }
+function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password</title>
     <style>
         body {
@@ -76,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['reset_password'])) {
             padding: 35px 50px 35px 50px;
             border: 0.5 solid black;
             border-radius: 10px;
+            max-width: 525px;
         }
 
         h2 {
@@ -156,51 +163,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['reset_password'])) {
             margin-bottom: 25px;
             font-size: 12px;
         }
-
-        .resend {
-            background-color: rgb(1, 50, 32);
-            padding: 5px 10px 5px 10px;
-            color: #f0f0f0;
-            cursor: pointer;
-            justify-self: right;
-            border: none;
-            border-radius: 7px;
-        }
     </style>
 </head>
-
 <body>
     <div class="container">
         <div class="container-row">
             <div class="container-col">
                 <h2>Reset Password</h2>
-
-                <form class="form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
+                <?php if ($error_message) echo "<p style='color:red;'>$error_message</p>"; ?>
+                <?php if ($success_message) echo "<p style='color:green;'>$success_message</p>"; ?>
+                
+                <?php if (!$success_message && isset($_GET['token']) && time() <= $expires): ?>
+                <form class="form" method="POST" action="">
                     <div class="input-wrapper">
                         <input type="password" name="new_password" id="new_password" class="form-control" placeholder="Enter new password" required>
                     </div>
-
-                    <small class="error_mssg">
-                        <?php echo $error_message; ?>
-                    </small>
-
                     <div class="input-wrapper">
                         <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirm new password" required>
                     </div>
-
-                    <small class="error_mssg">
-                        <?php echo $confirmPass_err; ?>
-                    </small>
-
                     <div class="input-wrapper input-wrapper-submit">
                         <input type="submit" name="reset_password" class="btn btn-primary" value="Reset Password">
                     </div>
-                    
                 </form>
-
+                <?php endif; ?>
             </div>
         </div>
-    </div>
+    </div>    
 </body>
-
 </html>

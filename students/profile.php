@@ -48,6 +48,17 @@ function test_input($data)
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Profile</title>
+    <style>
+        .button-pdiv {
+            padding: 0px 15px 0px 15px;
+        }
+        .form-spacing {
+            margin-top: 25px;
+        }
+        .hide-pass {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
