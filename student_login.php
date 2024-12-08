@@ -141,6 +141,14 @@ function test_input($data)
         .input-wrapper div {
             margin: auto;
         }
+        .forgotPassword {
+            color: lightblue;
+        }
+        .forgotPassword:hover {
+            color: #fff;
+            cursor: pointer;
+            text-decoration: underline;
+        }
     </style>
     <script>
         // function enableSubmitButton() {
@@ -197,8 +205,8 @@ function test_input($data)
                     </div>
 
                     <div>
-                        <small>Forgot your password?</small>
-                        <a href="forgot_password.php" class="forgotPassword">Reset it here</a>
+                        <small><a href="forgot_password.php" class="forgotPassword">Forgot your password?</a></small>
+                        
                     </div>
 
                     <br>
