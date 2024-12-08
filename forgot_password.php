@@ -24,25 +24,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user_id = $row['s_ID'];
             mysqli_query($conn, "INSERT INTO password_resets (user_id, token, expires) VALUES ('$user_id', '$token', '$expires')");
 
-            $reset_link = "http://localhost/GitHub/Library-Management-System/reset_password.php?token=$token"; // Replace with actual domain
+            $reset_link = "http://localhost/GitHub/Library-Management-System/reset_password.php?token=$token";
 
             $mail = new PHPMailer(true);
 
             try {
-                // SMTP server configuration
                 $mail->isSMTP();
-                $mail->Host = 'smtp.gmail.com'; // Use your SMTP host
+                $mail->Host = 'smtp.gmail.com'; 
                 $mail->SMTPAuth = true;
-                $mail->Username = 'rondale.bufete7@gmail.com'; // Your email address
-                $mail->Password = 'wppmgxruzoeclqal'; // Your email password or app-specific password
+                $mail->Username = 'rondale.bufete7@gmail.com'; 
+                $mail->Password = 'wppmgxruzoeclqal'; 
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port = 587;
 
-                // Email settings
                 $mail->setFrom('rondale.bufete7@gmail.com', 'Library Management System');
-                $mail->addAddress($email); // Recipient's email
+                $mail->addAddress($email); 
                 $mail->Subject = 'Password Reset Request';
-                $mail->isHTML(true); // Ensure the email is sent as HTML
+                $mail->isHTML(true);
                 $mail->Body = "
                     <html>
                     <body>
@@ -54,8 +52,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </body>
                     </html>
                 ";
-
-                // Send email
                 $mail->send();
                 $success_message = "A password reset link has been sent to your email.";
             } catch (Exception $e) {
@@ -69,7 +65,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Function to sanitize user input
 function test_input($data) {
     $data = trim($data);
     $data = stripslashes($data);
