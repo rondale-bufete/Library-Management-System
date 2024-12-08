@@ -62,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['verify_password'])) {
             padding: 35px 50px 35px 50px;
             border: 0.5 solid black;
             border-radius: 10px;
+             max-width: 525px;
         }
 
         h2 {
