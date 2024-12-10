@@ -3,6 +3,11 @@ include "header.php";
 include "link.php";
 include "verify_user.php";
 require "dbcon.php";
+// PHPMailer Dependencies
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'vendor/autoload.php';
 
 // Initialize variables
 $usename = $studPass = "";
@@ -46,8 +51,10 @@ if ($count >= 3) {
             // Determine if the login input is an email or username
             if (filter_var($login_identifier, FILTER_VALIDATE_EMAIL)) {
                 $sql = "SELECT * FROM students WHERE s_email=?";
+                $s_email = $row['s_email'];
             } else {
                 $sql = "SELECT * FROM students WHERE s_username=?";
+                $s_email = $row['s_email'];
             }
 
             $stmt = mysqli_prepare($conn, $sql);
@@ -58,13 +65,46 @@ if ($count >= 3) {
             // Check if the user exists
             if (mysqli_num_rows($result) === 1) {
                 $row = mysqli_fetch_assoc($result);
-
+                $s_email = $row['s_email'];
+                $s_fname = $row['s_fname'];
                 // Use password_verify to check the password
                 if (password_verify($password_inputted, $row['s_password'])) {
                     $delete_query = mysqli_query($conn, "DELETE FROM ip_details WHERE ip = '$ip'");
                     // Correct username and password - set session and redirect
                     $_SESSION['s_ID'] = $row['s_ID'];
                     $_SESSION['type_of_user'] = "student";
+
+                     //PHPMailer Section
+                        $mail = new PHPMailer(true);
+                        try {
+                            $mail->isSMTP();
+                            $mail->Host = 'smtp.gmail.com';
+                            $mail->SMTPAuth = true;
+                            $mail->Username = 'rondale.bufete7@gmail.com';
+                            $mail->Password = 'wppmgxruzoeclqal';
+                            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                            $mail->Port = 587;
+
+                            $mail->setFrom('rondale.bufete7@gmail.com', 'Library Management');
+                            $mail->addAddress($s_email);
+
+                            $mail->isHTML(true);
+                            $mail->Subject = 'Welcome to the Library Management System';
+                            $mail->Body = "
+                                <p>Hello! $s_fname,</p>
+                                <p>Welcome to our <strong>Library Management System</strong>! We're excited to have you as a part of our community.</p>
+                                <p>You can now access all the features of the system, including borrowing books, checking your account, and more.</p>
+                                <p>If you need any assistance, feel free to reach out to our support team at any time.</p>
+                                <br>
+                                <p>Best regards,<br>
+                                The Library Management System Team</p>
+                                <p><small>This is an automated email. Please do not reply directly to this email.</small></p>
+                            ";
+
+                            $mail->send();
+                        } catch (Exception $e) {
+                            $error_mssg = "OTP could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                        }
                     header("Location: students/student_dashboard.php");
                     exit();
                 } else {
@@ -85,10 +125,8 @@ if ($count >= 3) {
             mysqli_close($conn);
         }
     }
-    // }
 }
 
-// Function to sanitize user input
 function test_input($data)
 {
     $data = trim($data);
@@ -97,9 +135,6 @@ function test_input($data)
     return $data;
 }
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -171,6 +206,9 @@ function test_input($data)
         }
 
         window.onload = startCountdown;
+        function reloadPage() {
+            window.onload;
+        }
     </script>
 </head>
 
@@ -197,12 +235,11 @@ function test_input($data)
                     </small>
 
                     <div class="input-wrapper input-wrapper-submit">
-                        <input type="submit" id="submitForm" value="Login" name="login_student" data-sitekey="6LcHn1MqAAAAAEHIjMkq5jj1L_DO8KDx1bW2Nk3v">
+                        <input type="submit" id="submitForm" value="Login" name="login_student" onclick="reloadPage()">
                     </div>
 
                     <div>
                         <small><a href="forgot_password.php" class="forgotPassword">Forgot your password?</a></small>
-                        
                     </div>
 
                     <br>
@@ -210,9 +247,9 @@ function test_input($data)
                         <small>Don't have an Account?</small><a href="student_register.php" class="registerNow">Register Now!</a>
                     </div>
 
-                    <div class="goBack">
+                    <!-- <div class="goBack">
                         <a href="index.php">Go Back</a>
-                    </div>
+                    </div> -->
                 </form>
             </div>
         </div>

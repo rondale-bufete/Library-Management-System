@@ -176,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['reset_password'])) {
     <div class="container">
         <div class="container-row">
             <div class="container-col">
-                <h2>Reset Password</h2>
+                <h2>Change Password</h2>
 
                 <form class="form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
                     <div class="input-wrapper">
@@ -196,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['reset_password'])) {
                     </small>
 
                     <div class="input-wrapper input-wrapper-submit">
-                        <input type="submit" name="reset_password" class="btn btn-primary" value="Reset Password">
+                        <input type="submit" name="reset_password" class="btn btn-primary" value="Change Password">
                     </div>
                     
                 </form>

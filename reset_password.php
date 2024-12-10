@@ -21,23 +21,28 @@ if (isset($_GET['token'])) {
                 $new_password = test_input($_POST['new_password']);
                 $confirm_password = test_input($_POST['confirm_password']);
 
-                if ($new_password === $confirm_password) {
-                    $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-                    $user_id = $row['user_id'];
+                $passRequire = "/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/";
+                if (preg_match($passRequire, $new_password)) {
+                    if ($new_password === $confirm_password) {
+                        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                        $user_id = $row['user_id'];
 
-                    mysqli_query($conn, "UPDATE students SET s_password = '$hashed_password' WHERE s_ID = '$user_id'");
+                        mysqli_query($conn, "UPDATE students SET s_password = '$hashed_password' WHERE s_ID = '$user_id'");
 
-                    mysqli_query($conn, "DELETE FROM password_resets WHERE token = '$token'");
+                        mysqli_query($conn, "DELETE FROM password_resets WHERE token = '$token'");
 
-                    $success_message = "Your password has been reset successfully. You can now log in.";
-                    echo
-                        "<script>
-                                alert('$success_message');
-                                window.location.href = 'student_login.php';
-                            </script>";
-                        exit();
+                        $success_message = "Your password has been reset successfully. You can now log in.";
+                        echo
+                            "<script>
+                                    alert('$success_message');
+                                    window.location.href = 'student_login.php';
+                                </script>";
+                            exit();
+                    } else {
+                        $error_message = "Passwords do not match.";
+                    }
                 } else {
-                    $error_message = "Passwords do not match.";
+                     $error_message = "Password must be at least 8 characters long, including 1 uppercase letter, 1 number, and 1 special character.";
                 }
             }
         } else {
@@ -170,10 +175,7 @@ function test_input($data) {
         <div class="container-row">
             <div class="container-col">
                 <h2>Reset Password</h2>
-                <?php if ($error_message) echo "<p style='color:red;'>$error_message</p>"; ?>
-                <?php if ($success_message) echo "<p style='color:green;'>$success_message</p>"; ?>
                 
-                <?php if (!$success_message && isset($_GET['token']) && time() <= $expires): ?>
                 <form class="form" method="POST" action="">
                     <div class="input-wrapper">
                         <input type="password" name="new_password" id="new_password" class="form-control" placeholder="Enter new password" required>
@@ -181,6 +183,10 @@ function test_input($data) {
                     <div class="input-wrapper">
                         <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirm new password" required>
                     </div>
+                    <?php if ($error_message) echo "<p style='color:red;'>$error_message</p>"; ?>
+                    <?php if ($success_message) echo "<p style='color:green;'>$success_message</p>"; ?>
+                    
+                    <?php if (!$success_message && isset($_GET['token']) && time() <= $expires): ?>
                     <div class="input-wrapper input-wrapper-submit">
                         <input type="submit" name="reset_password" class="btn btn-primary" value="Reset Password">
                     </div>
