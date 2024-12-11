@@ -171,29 +171,40 @@ function test_input($data) {
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="container-row">
-            <div class="container-col">
-                <h2>Reset Password</h2>
-                
-                <form class="form" method="POST" action="">
-                    <div class="input-wrapper">
-                        <input type="password" name="new_password" id="new_password" class="form-control" placeholder="Enter new password" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirm new password" required>
-                    </div>
-                    <?php if ($error_message) echo "<p style='color:red;'>$error_message</p>"; ?>
-                    <?php if ($success_message) echo "<p style='color:green;'>$success_message</p>"; ?>
-                    
-                    <?php if (!$success_message && isset($_GET['token']) && time() <= $expires): ?>
-                    <div class="input-wrapper input-wrapper-submit">
-                        <input type="submit" name="reset_password" class="btn btn-primary" value="Reset Password">
-                    </div>
-                </form>
-                <?php endif; ?>
-            </div>
+<div class="container">
+    <div class="container-row">
+        <div class="container-col">
+            <h2>Reset Password</h2>
+            
+            <form class="form" method="POST" action="">
+                <div class="input-wrapper">
+                    <input type="password" name="new_password" id="new_password" class="form-control" placeholder="Enter new password" required>
+                </div>
+                <div class="input-wrapper">
+                    <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirm new password" required>
+                </div>
+                <?php
+                if ($error_message) {
+                    echo "<p style='color:red;'>$error_message</p>";
+                } elseif ($success_message) {
+                    echo "<p style='color:green;'>$success_message</p>";
+                }
+
+                if (!$success_message) {
+                    if (isset($_GET['token']) && time() <= $expires) {
+                        echo '
+                            <div class="input-wrapper input-wrapper-submit">
+                                <input type="submit" name="reset_password" class="btn btn-primary" value="Reset Password">
+                            </div>
+                        ';
+                    } else {
+                        echo '<p style="color:red;">Invalid or expired token.</p>';
+                    }
+                }
+                ?>
+            </form>
         </div>
-    </div>    
+    </div>
+</div>   
 </body>
 </html>

@@ -51,10 +51,8 @@ if ($count >= 3) {
             // Determine if the login input is an email or username
             if (filter_var($login_identifier, FILTER_VALIDATE_EMAIL)) {
                 $sql = "SELECT * FROM students WHERE s_email=?";
-                $s_email = $row['s_email'];
             } else {
                 $sql = "SELECT * FROM students WHERE s_username=?";
-                $s_email = $row['s_email'];
             }
 
             $stmt = mysqli_prepare($conn, $sql);
