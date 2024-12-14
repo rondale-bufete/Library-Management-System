@@ -80,7 +80,6 @@ function test_input($data) {
             background-repeat: no-repeat;
             background-size: 100% 100%;
         }
-
         .container {
             backdrop-filter: blur(1px);
             background-color: rgba(0, 0, 0, 0.8);
@@ -89,14 +88,12 @@ function test_input($data) {
             border-radius: 10px;
             max-width: 525px;
         }
-
         h2 {
             font-size: 24px;
             margin-bottom: 20px;
             color: #f0f0f0;
             text-align: center;
         }
-
         p {
             color: #f0f0f0;
             text-align: center;
@@ -104,12 +101,10 @@ function test_input($data) {
             font-size: small;
             font-style: normal;
         }
-
         .email {
             font-style: italic;
             font-weight: bold;
         }
-
         .input-wrapper {
             margin-bottom: 5px;
             margin-top: 5px;
@@ -117,7 +112,6 @@ function test_input($data) {
             align-items: center;
             justify-content: space-between;
         }
-
         .input-wrapper label {
             font-size: 14px;
             color: #555555;
@@ -126,7 +120,6 @@ function test_input($data) {
             width: 100px;
             text-align: left;
         }
-
         .input-wrapper input[type="text"] {
             flex-grow: 1;
             padding: 10px;
@@ -137,16 +130,13 @@ function test_input($data) {
             transition: all 0.3s ease;
             margin: 0;
         }
-
         .input-wrapper input[type="text"]:focus {
             border-color: #2d89ef;
             box-shadow: 0 0 5px rgba(45, 137, 239, 0.5);
         }
-
         .input-wrapper-submit {
             margin-top: 20px;
         }
-
         .input-wrapper-submit input[type="submit"] {
             width: 100%;
             background-color: #2d89ef;
@@ -158,11 +148,9 @@ function test_input($data) {
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-
         .input-wrapper-submit input[type="submit"]:hover {
             background-color: #1c6dce;
         }
-
         small.error_mssg {
             color: red !important;
             margin-bottom: 25px;
