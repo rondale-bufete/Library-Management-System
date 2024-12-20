@@ -4,63 +4,63 @@ include "./students/links.php";
 
 $error_message = $success_message = "";
 
-if (isset($_GET['token'])) {
-    $token = $_GET['token'];
-    
-    $stmt = mysqli_prepare($conn, "SELECT user_id, expires FROM password_resets WHERE token = ?");
-    mysqli_stmt_bind_param($stmt, "s", $token);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
+    if (isset($_GET['token'])) {
+        $token = $_GET['token'];
+        
+        $stmt = mysqli_prepare($conn, "SELECT user_id, expires FROM password_resets WHERE token = ?");
+        mysqli_stmt_bind_param($stmt, "s", $token);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
 
-    if (mysqli_num_rows($result) === 1) {
-        $row = mysqli_fetch_assoc($result);
-        $expires = $row['expires'];
+        if (mysqli_num_rows($result) === 1) {
+            $row = mysqli_fetch_assoc($result);
+            $expires = $row['expires'];
 
-        if (time() <= $expires) {
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $new_password = test_input($_POST['new_password']);
-                $confirm_password = test_input($_POST['confirm_password']);
+            if (time() <= $expires) {
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                    $new_password = test_input($_POST['new_password']);
+                    $confirm_password = test_input($_POST['confirm_password']);
 
-                $passRequire = "/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/";
-                if (preg_match($passRequire, $new_password)) {
-                    if ($new_password === $confirm_password) {
-                        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-                        $user_id = $row['user_id'];
+                    $passRequire = "/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/";
+                    if (preg_match($passRequire, $new_password)) {
+                        if ($new_password === $confirm_password) {
+                            $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                            $user_id = $row['user_id'];
 
-                        mysqli_query($conn, "UPDATE students SET s_password = '$hashed_password' WHERE s_ID = '$user_id'");
+                            mysqli_query($conn, "UPDATE students SET s_password = '$hashed_password' WHERE s_ID = '$user_id'");
 
-                        mysqli_query($conn, "DELETE FROM password_resets WHERE token = '$token'");
+                            mysqli_query($conn, "DELETE FROM password_resets WHERE token = '$token'");
 
-                        $success_message = "Your password has been reset successfully. You can now log in.";
-                        echo
-                            "<script>
-                                    alert('$success_message');
-                                    window.location.href = 'student_login.php';
-                                </script>";
-                            exit();
+                            $success_message = "Your password has been reset successfully. You can now log in.";
+                            echo
+                                "<script>
+                                        alert('$success_message');
+                                        window.location.href = 'student_login.php';
+                                    </script>";
+                                exit();
+                        } else {
+                            $error_message = "Passwords do not match.";
+                        }
                     } else {
-                        $error_message = "Passwords do not match.";
+                        $error_message = "Password must be at least 8 characters long, including 1 uppercase letter, 1 number, and 1 special character.";
                     }
-                } else {
-                     $error_message = "Password must be at least 8 characters long, including 1 uppercase letter, 1 number, and 1 special character.";
                 }
+            } else {
+                $error_message = "This token has expired. Please request a new password reset.";
             }
         } else {
-            $error_message = "This token has expired. Please request a new password reset.";
+            $error_message = "Invalid token.";
         }
     } else {
-        $error_message = "Invalid token.";
+        $error_message = "No token provided.";
     }
-} else {
-    $error_message = "No token provided.";
-}
 
-function test_input($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}
+    function test_input($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
 ?>
 
 <!DOCTYPE html>
