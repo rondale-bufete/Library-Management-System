@@ -78,7 +78,7 @@ if (isset($_POST['register'])) {
                             $mail->Subject = 'Verify Your Registration - OTP Code';
                             $mail->Body = "
                                             <p>Dear {$_POST['s_fname']},</p>
-                                            <p>Thank you for registering with <strong>University Library</strong>. To complete your registration, please verify your email address by entering the One-Time Password (OTP) provided below:</p>
+                                            <p>Thank you for registering with our<strong>Library Management System</strong>. To complete your registration, please verify your email address by entering the One-Time Password (OTP) provided below:</p>
                                             <h2 style='text-align: center; color: #2d89ef;'>Your Verification Code: <strong'>$otp</strong></h2>
                                             <p>This OTP is valid for <strong>10 minutes</strong>.</p>
                                             <p>If you did not attempt to register, please ignore this email or contact our support team.</p>

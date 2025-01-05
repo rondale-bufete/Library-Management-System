@@ -62,7 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['verify_password'])) {
             padding: 35px 50px 35px 50px;
             border: 0.5 solid black;
             border-radius: 10px;
-             max-width: 525px;
+            max-width: 525px;
+            margin: auto 5% auto 5%;
         }
 
         h2 {
@@ -142,6 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['verify_password'])) {
         <div class="container-row">
             <div class="container-col">
                 <h2>Verify Password</h2>
+                <div class="col-md-6"></div>
                 <form class="form" action="<?= htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
                     <div class="input-wrapper">
                         <input type="password" name="password" id="password" class="form-control" placeholder="Enter Current Password" required>

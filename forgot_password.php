@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <body>
                         <p>Hello,</p>
                         <p>You requested to reset your password. Please click the button below to proceed:</p>
-                        <a href='$reset_link' style='display: inline-block; padding: 10px 15px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;'>Reset Password</a>
+                        <a href='$reset_link' style='display: inline-block; padding: 10px 15px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;'>Verify Password Reset</a>
                         <p>If you did not request this, you can safely ignore this email.</p>
                         <p>Thank you, <br> Library Management System Team</p>
                     </body>
@@ -55,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ";
                 $mail->send();
                 $success_message = "A password reset link has been sent to your email.";
+                
             } catch (Exception $e) {
                 $error_message = "Mailer Error: " . $mail->ErrorInfo;
             }
