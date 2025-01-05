@@ -26,7 +26,6 @@ if (isset($_GET['token'])) {
                     $user_id = $row['user_id'];
 
                     mysqli_query($conn, "UPDATE students SET s_password = '$hashed_password' WHERE s_ID = '$user_id'");
-
                     mysqli_query($conn, "DELETE FROM password_resets WHERE token = '$token'");
 
                     $success_message = "Your password has been reset successfully. You can now log in.";
@@ -40,10 +39,12 @@ if (isset($_GET['token'])) {
                     $error_message = "Passwords do not match.";
                 }
             }
-        } else {
+        } 
+        else {
             $error_message = "This token has expired. Please request a new password reset.";
         }
-    } else {
+    } 
+    else {
         $error_message = "Invalid token.";
     }
 } else {
